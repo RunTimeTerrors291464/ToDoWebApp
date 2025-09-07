@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { GlobalExceptionFilter } from './common/globalExceptionFilter';
-import cookieParser from 'cookie-parser'; 
+import cookieParser from 'cookie-parser';
 
 // Add Swagger.
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -37,7 +37,12 @@ async function bootstrap() {
     // Add cors.
     app.enableCors();
 
-    await app.listen(process.env.PORT ?? 3000);
-    console.log(`Server is running on port ${process.env.PORT ?? 3000}`);
+    // Listen to the IP and port.
+    const port = process.env.PORT ?? 3000;
+    const ip = process.env.HOST_IP ?? '0.0.0.0';
+    
+    await app.listen(port, ip);
+
+    console.log(`Server is running on port ${port} and IP ${ip}`);
 }
 bootstrap();

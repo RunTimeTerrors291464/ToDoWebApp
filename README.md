@@ -46,6 +46,7 @@ docker-compose logs -f
 
 # The API will be available at:
 # - API: http://localhost:3000
+# - Swagger Documentation: http://localhost:3000/api
 ```
 
 ### 4. Stop the application
@@ -77,7 +78,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
 ## API Documentation
 
-For now the API is the document using Word.
+Once the application is running, visit http://localhost:3000/api for interactive API documentation powered by Swagger.
 
 ## Database Setup
 
