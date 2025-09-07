@@ -46,7 +46,6 @@ docker-compose logs -f
 
 # The API will be available at:
 # - API: http://localhost:3000
-# - Swagger Documentation: http://localhost:3000/api
 ```
 
 ### 4. Stop the application
@@ -68,7 +67,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 | Variable | Description | Required |
 |----------|-------------|----------|
 | NODE_ENV | Environment (production/development) | Yes |
-| PORT | Application port | No (default: 3000) |
+| PORT | Application port | No (default: 3001) |
 | DB_HOST | PostgreSQL host | Yes |
 | DB_PORT | PostgreSQL port | No (default: 5432) |
 | DB_USERNAME | Database username | Yes |
@@ -78,7 +77,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
 ## API Documentation
 
-Once the application is running, visit http://localhost:3000/api for interactive API documentation powered by Swagger.
+For now the API is the document using Word.
 
 ## Database Setup
 
