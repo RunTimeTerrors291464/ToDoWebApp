@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Helper nhằm giống wireframe login */
+.auth-card {
+  @apply w-full max-w-md mx-auto rounded-xl border border-gray-300 p-6 shadow-sm;
+}
