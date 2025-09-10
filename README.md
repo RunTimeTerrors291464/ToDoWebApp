@@ -39,7 +39,7 @@
 ### 1. Clone repository
 ```bash
 git clone <repository-url>
-cd toDoList
+cd <folder-name>
 ```
 
 ### 2. Tạo file .env
@@ -51,7 +51,7 @@ cp .env.example .env
 Cập nhật các biến môi trường:
 ```env
 NODE_ENV=<production || development>
-HOST_IP=0<IP của server>
+HOST_IP=<IP của server>
 PORT=3001
 
 # PostgreSQL Database
@@ -69,8 +69,8 @@ ALLOWED_ORIGINS=*
 ```
 
 ### 3. Cài đặt postgreSQL thủ công (Sẽ thay đổi sớm)
-Đọc document ở đây https://docs.google.com/document/d/1T3RD--GT-g5n5NRH2IBii5-O8I11iwXW/edit?usp=drive_link&ouid=116769113173522098529&rtpof=true&sd=true
-Trong phần 2, hãy tạo các table tương ứng.
+- Đọc document ở đây https://docs.google.com/document/d/1T3RD--GT-g5n5NRH2IBii5-O8I11iwXW/edit?usp=drive_link&ouid=116769113173522098529&rtpof=true&sd=true
+- Trong phần 2, hãy tạo các table tương ứng.
 
 ### 4. Chạy với Docker (Khuyến nghị)
 ```bash
