@@ -50,20 +50,23 @@ export class ListController {
     // Edit a to do list.
     @Put('edit')
     @HttpCode(200)
-    async editList(@Query() id: number, @Body() editListDto: EditListDto, @Req() request: Request) {
+    async editList(@Query('id') id: string, @Body() editListDto: EditListDto, @Req() request: Request) {
         try {
+            // Convert the id to a number.
+            const idNumber = parseInt(id);
+
             // Get the user id from the request.
             const userId = (request as any).user.id;
 
             // Get the to do list by id.
-            const list = await this.listService.getListById(id);
+            const list = await this.listService.getListById(idNumber);
             if (!list) throw new CustomErrorException(404, errorCodes.LIST_NOT_FOUND, 'To do list not found, please try again.');
 
             // Check if the user is the owner of the to do list.
             if (list.userId !== userId) throw new CustomErrorException(403, errorCodes.NOT_OWNER_OF_LIST, 'You are not the owner of this to do list, please try again.');
 
             // Edit the to do list.
-            const editedList = await this.listService.editList(id, editListDto);
+            const editedList = await this.listService.editList(idNumber, editListDto);
             return {
                 status: 200,
                 message: 'To do list edited successfully.',
@@ -97,13 +100,16 @@ export class ListController {
     // Get a to do list by id.
     @Get('id')
     @HttpCode(200)
-    async getListById(@Query() id: number, @Req() request: Request) {
+    async getListById(@Query('id') id: string, @Req() request: Request) {
         try {
             // Get the user id from the request.
             const userId = (request as any).user.id;
 
+            // Convert the id to a number.
+            const idNumber = parseInt(id);
+
             // Get a to do list by id.
-            const list = await this.listService.getListById(id);
+            const list = await this.listService.getListById(idNumber);
             if (!list) throw new CustomErrorException(404, errorCodes.LIST_NOT_FOUND, 'To do list not found, please try again.');
 
             // If the user is not the owner of the to do list, throw an error.
@@ -122,20 +128,23 @@ export class ListController {
     // Delete a to do list by id.
     @Delete('id')
     @HttpCode(200)
-    async deleteListById(@Query() id: number, @Req() request: Request) {
+    async deleteListById(@Query('id') id: string, @Req() request: Request) {
         try {
             // Get the user id from the request.
             const userId = (request as any).user.id;
 
+            // Convert the id to a number.
+            const idNumber = parseInt(id);
+
             // Get a to do list by id.
-            const list = await this.listService.getListById(id);
+            const list = await this.listService.getListById(idNumber);
             if (!list) throw new CustomErrorException(404, errorCodes.LIST_NOT_FOUND, 'To do list not found, please try again.');
 
             // If the user is not the owner of the to do list, throw an error.
             if (list.userId !== userId) throw new CustomErrorException(403, errorCodes.NOT_OWNER_OF_LIST, 'You are not the owner of this to do list.');
 
             // Delete the to do list.
-            const deletedList = await this.listService.deleteListById(id);
+            const deletedList = await this.listService.deleteListById(idNumber);
             return {
                 status: 200,
                 message: 'To do list deleted successfully.',

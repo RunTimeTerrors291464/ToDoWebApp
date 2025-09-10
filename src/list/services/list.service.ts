@@ -78,7 +78,6 @@ export class ListService {
         const queryBuilder = this.listRepository
             .createQueryBuilder('list')
             .where('list.userId = :userId', { userId })
-            .select('list.id, list.title, list.priority, list.status, list.createdAt')
             .orderBy(`list.${sortBy}`, sortOrder || 'ASC');
         
         // Apply filters.

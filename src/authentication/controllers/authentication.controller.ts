@@ -27,7 +27,7 @@ export class AuthenticationController {
                 data: result,
             }
         } catch (error) {
-            throw new CustomErrorException(400, errorCodes.API_AUTH_REGISTER_ERROR, 'Failed to register user. Please try again.');
+            throw new CustomErrorException(400, errorCodes.API_AUTH_REGISTER_ERROR, error.message);
         }
     }
 
@@ -42,7 +42,7 @@ export class AuthenticationController {
             response.cookie('accessToken', result.accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
+                sameSite: 'none',
                 maxAge: 14 * 24 * 60 * 60 * 1000, // 14 days
             });
 
