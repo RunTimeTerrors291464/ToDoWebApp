@@ -75,10 +75,10 @@ ALLOWED_ORIGINS=*
 ### 4. Chạy với Docker (Khuyến nghị)
 ```bash
 # Build và chạy container
-docker-compose up --build
+docker compose up --build
 
 # Chạy trong background
-docker-compose up -d
+docker compose up -d
 ```
 
 ## 📚 API Endpoints
