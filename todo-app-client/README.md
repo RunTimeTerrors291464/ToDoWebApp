@@ -1,36 +1,149 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📝 Todo App (Next.js + REST API)
 
-## Getting Started
+Ứng dụng Todo đơn giản với các chức năng **đăng ký, đăng nhập, đăng xuất, quản lý công việc (CRUD)**.  
+Frontend được xây dựng bằng **Next.js 13 App Router** + **TailwindCSS**, backend cung cấp API RESTful.
 
-First, run the development server:
+---
+
+## 🚀 Tính năng
+
+- **Xác thực**
+  - Đăng ký, đăng nhập, đăng xuất
+  - Cookie httpOnly để duy trì đăng nhập sau khi refresh
+- **Quản lý Task**
+  - Thêm, sửa, xoá task
+  - Trường: `title`, `description`, `priority`, `status`, `createdAt`
+- **Dashboard**
+  - Bảng hiển thị task
+  - Tìm kiếm theo `title`
+  - Lọc theo `priority` & `status`
+  - Sắp xếp theo `title`, `priority`, `status`, `createdAt`
+  - Phân trang
+- **UI**
+  - Modal form tạo/sửa task
+  - Navbar với logo + user info
+  - Animation bằng Framer Motion
+
+---
+
+## 🛠️ Tech Stack
+
+- [Next.js 13 (App Router)](https://nextjs.org/)
+- [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Zustand](https://zustand-demo.pmnd.rs/) – state management
+- [Axios](https://axios-http.com/) – gọi API
+- [React Hot Toast](https://react-hot-toast.com/) – thông báo
+
+---
+
+## 📂 Cấu trúc thư mục
+
+```
+
+todo-app-client/
+├── public/            # Logo, favicon
+├── src/
+│   ├── app/           # Next.js app router
+│   │   ├── login/     # Trang đăng nhập
+│   │   ├── register/  # Trang đăng ký
+│   │   └── dashboard/ # Trang dashboard
+│   ├── components/    # Navbar, TaskTable, TaskFormModal, UI components
+│   └── lib/           # useAuth, useTasks, api.ts, validators
+├── tailwind.config.ts
+└── README.md
+
+````
+
+---
+
+## ⚙️ Cài đặt
+
+### 1. Clone repo
+```bash
+git clone https://github.com/RunTimeTerrors291464/ToDoWebApp.git
+cd todo-app-client
+````
+
+### 2. Cài dependencies
+
+```bash
+npm install
+# hoặc
+yarn install
+```
+
+### 3. Tạo file môi trường
+
+Tạo `.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:4000/api
+```
+
+### 4. Chạy dev
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Truy cập: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔑 API Backend
 
-## Learn More
+### Login
 
-To learn more about Next.js, take a look at the following resources:
+```
+POST /api/auth/login
+Cookie: accessToken (httpOnly)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Register
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+POST /api/auth/register
+```
 
-## Deploy on Vercel
+### Fetch tasks
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+GET /api/list/pagination?page=1&limit=5&sortBy=title&sortOrder=ASC&priority=2&status=0&search=abc
+Cookie: accessToken (httpOnly)
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Create task
+
+```
+POST /api/list/create
+Cookie: accessToken (httpOnly)
+```
+
+### Update task
+
+```
+PUT /api/list/edit?id=<taskId>
+Cookie: accessToken (httpOnly)
+```
+
+### Delete task
+
+```
+DELETE /api/list/delete?id=<taskId>
+Cookie: accessToken (httpOnly)
+```
+
+---
+
+## ✅ Ghi chú
+
+* App chỉ lưu session bằng cookie httpOnly → không lưu token ở localStorage.
+* Khi deploy production, nhớ bật `secure: true` cho cookie (`SameSite=None; Secure`).
+
+---
+
+## 📜 License
+
+MIT
