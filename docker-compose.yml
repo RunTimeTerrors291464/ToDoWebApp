@@ -8,7 +8,6 @@ services:
         build:
             context: . # Thư mục mà Docker có quyền truy cập khi build. "." là thư mục cao nhất của project.
             dockerfile: Dockerfile # Tên file Dockerfile.
-            target: production
         container_name: todolist-app
         restart: unless-stopped
         environment:
