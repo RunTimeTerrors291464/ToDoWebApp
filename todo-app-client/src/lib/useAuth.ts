@@ -40,7 +40,7 @@ export const useAuth = create<AuthState>((set, get) => ({
   login: async (username, password) => {
     const { data } = await api.post("/auth/login", { username, password });
     set({ user: data.data }); // lấy user từ response
-    
+
     // set({ user: { username } }); // 🚧 MOCK: không gọi API, chỉ set user
   },
 

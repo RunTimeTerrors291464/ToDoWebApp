@@ -11,8 +11,11 @@ import { useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
 
 export default function AuthForm({ mode }: { mode: "login" | "register" }) {
-  const { register: reg, handleSubmit, formState: { errors, isSubmitting } } =
-    useForm<AuthInput>({ resolver: zodResolver(authSchema) });
+  const {
+    register: reg,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<AuthInput>({ resolver: zodResolver(authSchema) });
   const auth = useAuth();
   const router = useRouter();
 
@@ -21,11 +24,12 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
       if (mode === "login") {
         await auth.login(values.username, values.password);
         toast.success("Đăng nhập thành công");
+        router.push("/dashboard");
       } else {
         await auth.register(values.username, values.password);
         toast.success("Đăng ký thành công");
+        router.push("/login");
       }
-      router.push("/dashboard");
     } catch (e: any) {
       toast.error(e.message);
     }
@@ -34,13 +38,20 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
   return (
     <div className="min-h-screen grid place-items-center">
       <div className="auth-card relative">
-        <h1 className="mb-6 text-center text-xl font-bold tracking-wide">HELLO</h1>
+        <h1 className="mb-6 text-center text-xl font-bold tracking-wide">
+          {" "}
+          {mode === "login" ? "ĐĂNG NHẬP" : "ĐĂNG KÝ"}
+        </h1>
 
         <form onSubmit={onSubmit} className="space-y-4">
           <Input placeholder="Username" {...reg("username")} />
-          {errors.username && <p className="text-sm text-red-600">{errors.username.message}</p>}
+          {errors.username && (
+            <p className="text-sm text-red-600">{errors.username.message}</p>
+          )}
           <Input placeholder="Password" type="password" {...reg("password")} />
-          {errors.password && <p className="text-sm text-red-600">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="text-sm text-red-600">{errors.password.message}</p>
+          )}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {mode === "login" ? "Đăng nhập" : "Đăng ký"}
@@ -49,9 +60,19 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
 
         <div className="mt-6 text-center">
           {mode === "login" ? (
-            <p>New user? <Link className="underline" href="/register">Register here</Link></p>
+            <p>
+              New user?{" "}
+              <Link className="underline" href="/register">
+                Register here
+              </Link>
+            </p>
           ) : (
-            <p>Đã có tài khoản? <Link className="underline" href="/login">Đăng nhập</Link></p>
+            <p>
+              Đã có tài khoản?{" "}
+              <Link className="underline" href="/login">
+                Đăng nhập
+              </Link>
+            </p>
           )}
         </div>
 

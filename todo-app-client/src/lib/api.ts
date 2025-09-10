@@ -11,7 +11,7 @@ api.interceptors.response.use(
   (err) => {
     console.log("API ERROR:", err);
     
-    const msg = err?.response?.message || "Có lỗi xảy ra";
+    const msg = err?.response?.data?.message || "Có lỗi xảy ra";
     return Promise.reject(new Error(msg));
   }
 );
