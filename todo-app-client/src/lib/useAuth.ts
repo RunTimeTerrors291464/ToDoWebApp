@@ -1,5 +1,5 @@
 import { create } from "zustand";
-// import { api } from "./api";
+import { api } from "./api";
 
 type User = { username: string } | null;
 
@@ -38,18 +38,20 @@ export const useAuth = create<AuthState>((set, get) => ({
   },
 
   login: async (username, password) => {
-    // const { data } = await api.post("/api/auth/login", { username, password });
-    // set({ user: data.data }); // lấy user từ response
-    set({ user: { username } });
+    const { data } = await api.post("/auth/login", { username, password });
+    set({ user: data.data }); // lấy user từ response
+    
+    // set({ user: { username } }); // 🚧 MOCK: không gọi API, chỉ set user
   },
 
   register: async (username, password) => {
-    // const { data } = await api.post("/api/auth/register", {
-    //   username,
-    //   password,
-    // });
-    // set({ user: data.data.user }); // backend trả {user: {...}}
-    set({ user: { username } });
+    const { data } = await api.post("/auth/register", {
+      username,
+      password,
+    });
+    set({ user: data.data.user }); // backend trả {user: {...}}
+
+    // set({ user: { username } }); // 🚧 MOCK: không gọi API, chỉ set user
   },
 
   logout: async () => {

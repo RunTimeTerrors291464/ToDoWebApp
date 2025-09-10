@@ -9,7 +9,9 @@ export const api = axios.create({
 api.interceptors.response.use(
   (r) => r,
   (err) => {
-    const msg = err?.response?.data?.message || "Có lỗi xảy ra";
+    console.log("API ERROR:", err);
+    
+    const msg = err?.response?.message || "Có lỗi xảy ra";
     return Promise.reject(new Error(msg));
   }
 );

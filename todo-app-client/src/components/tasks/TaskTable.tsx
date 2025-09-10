@@ -24,7 +24,7 @@ export default function TaskTable() {
   const [sortBy, setSortBy] = useState<
     "title" | "priority" | "status" | "createdAt"
   >("createdAt");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
@@ -32,42 +32,63 @@ export default function TaskTable() {
   const [filterStatus, setFilterStatus] = useState<number | null>(null);
 
   // Search state
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
 
+  // fetch tasks on mount + when sort/filter/page/search change
   useEffect(() => {
-    tasks.fetch().catch(() => toast.error("Không tải được tasks"));
-  }, []);
+    tasks
+      .fetch({
+        page,
+        limit: pageSize,
+        sortBy,
+        sortOrder: sortOrder.toUpperCase() as "ASC" | "DESC",
+        priority: filterPriority,
+        status: filterStatus,
+        search,
+      })
+      .catch(() => toast.error("Không tải được tasks"));
+  }, [page, pageSize, sortBy, sortOrder, filterPriority, filterStatus, search]);
 
-  // filter + sort
-  const filtered = useMemo(() => {
-    let data = tasks.items;
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setSearch(searchInput.trim());
+      setPage(1); // reset về page 1 khi search
+    }, 500); // 0.5s sau khi ngừng gõ mới fetch
 
-    if (filterPriority !== null) {
-      data = data.filter((t) => t.priority === filterPriority);
-    }
-    if (filterStatus !== null) {
-      data = data.filter((t) => t.status === filterStatus);
-    }
-    if (search.trim() !== "") {
-      data = data.filter((t) =>
-        t.title.toLowerCase().includes(search.toLowerCase())
-      );
-    }
+    return () => clearTimeout(handler);
+  }, [searchInput]);
 
-    data = [...data].sort((a, b) => {
-      const valA = a[sortBy];
-      const valB = b[sortBy];
-      if (valA < valB) return sortOrder === "asc" ? -1 : 1;
-      if (valA > valB) return sortOrder === "asc" ? 1 : -1;
-      return 0;
-    });
+  // filter + sort in UI
+  // const filtered = useMemo(() => {
+  //   let data = tasks.items;
 
-    return data;
-  }, [tasks.items, sortBy, sortOrder, filterPriority, filterStatus, search]);
+  //   if (filterPriority !== null) {
+  //     data = data.filter((t) => t.priority === filterPriority);
+  //   }
+  //   if (filterStatus !== null) {
+  //     data = data.filter((t) => t.status === filterStatus);
+  //   }
+  //   if (search.trim() !== "") {
+  //     data = data.filter((t) =>
+  //       t.title.toLowerCase().includes(search.toLowerCase())
+  //     );
+  //   }
 
-  // pagination
-  const totalPages = Math.ceil(filtered.length / pageSize);
-  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+  //   data = [...data].sort((a, b) => {
+  //     const valA = a[sortBy];
+  //     const valB = b[sortBy];
+  //     if (valA < valB) return sortOrder === "asc" ? -1 : 1;
+  //     if (valA > valB) return sortOrder === "asc" ? 1 : -1;
+  //     return 0;
+  //   });
+
+  //   return data;
+  // }, [tasks.items, sortBy, sortOrder, filterPriority, filterStatus, search]);
+
+  // // pagination
+  // const totalPages = Math.ceil(filtered.length / pageSize);
+  // const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <div className="flex-1 rounded-xl border bg-white p-4 shadow-sm">
@@ -140,8 +161,8 @@ export default function TaskTable() {
               type="text"
               className="border rounded-md px-2 py-1 text-sm"
               placeholder="Search title..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>
@@ -174,7 +195,7 @@ export default function TaskTable() {
           </thead>
           <tbody>
             <AnimatePresence initial={false}>
-              {paginated.map((t) => (
+              {tasks.items.map((t) => (
                 <motion.tr
                   key={t.id}
                   layout
@@ -231,7 +252,8 @@ export default function TaskTable() {
       {/* Pagination controls */}
       <div className="flex justify-between items-center mt-3 text-sm">
         <span>
-          Page {page} / {totalPages || 1}
+          {/* Page {page} / {totalPages || 1} */}
+          Page {tasks.currentPage} / {tasks.totalPages || 1}
         </span>
         <div className="flex gap-2">
           <Button
@@ -243,7 +265,7 @@ export default function TaskTable() {
           </Button>
           <Button
             variant="ghost"
-            disabled={page >= totalPages}
+            disabled={page >= tasks.totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
             Next
