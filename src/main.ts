@@ -25,8 +25,7 @@ async function bootstrap() {
 
     // Add cors.
     app.enableCors({
-        origin: '*',
-        credentials: true,
+        origin: '*'
     });
 
     // Listen to the IP and port.
