@@ -23,11 +23,6 @@ async function bootstrap() {
         transform: true
     }));
 
-    // Add cors.
-    app.enableCors({
-        origin: '*'
-    });
-
     // Listen to the IP and port.
     const port = process.env.PORT ?? 3000;
     const bindIP = process.env.BIND_IP ?? '0.0.0.0';
