@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# To-Do List API
 
-## Getting Started
+Ứng dụng API quản lý danh sách công việc (To-Do List) được xây dựng bằng NestJS và PostgreSQL.
 
-First, run the development server:
+## 📋 Tính năng
 
+### 🔐 Xác thực người dùng (Authentication)
+- Đăng ký tài khoản mới
+- Đăng nhập với JWT token
+- Bảo vệ API endpoints với JWT Guard
+- Lưu trữ token trong HTTP-only cookies
+
+### 📝 Quản lý danh sách công việc (To-Do Management)
+- Tạo công việc mới
+- Chỉnh sửa công việc
+- Xem danh sách công việc với phân trang
+- Xem chi tiết công việc theo ID
+- Xóa công việc
+- Phân loại độ ưu tiên: NONE, LOW, MEDIUM, HIGH, URGENT
+- Trạng thái công việc: TODO, IN_PROGRESS, COMPLETED, CANCELLED
+
+## 🛠 Công nghệ sử dụng
+
+- **Backend Framework**: NestJS
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Authentication**: JWT (JSON Web Token)
+- **Password Hashing**: bcrypt
+- **Validation**: class-validator, class-transformer
+- **Containerization**: Docker & Docker Compose
+
+## 🚀 Cài đặt và chạy dự án
+
+### Yêu cầu hệ thống
+- Node.js 20+
+- Docker & Docker Compose
+- PostgreSQL 
+
+### 1. Clone repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd toDoList
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Tạo file .env
+Tạo file `.env` từ `.env.example`:
+```bash
+cp .env.example .env
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Cập nhật các biến môi trường:
+```env
+NODE_ENV=<production || development>
+HOST_IP=0<IP của server>
+PORT=3001
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# PostgreSQL Database
+DB_HOST=your-db-host
+DB_PORT=5432
+DB_USERNAME=your-db-username
+DB_PASSWORD=your-db-password
+DB_NAME=your-db-name
 
-## Learn More
+# JWT Secret
+JWT_SECRET=your-super-secret-jwt-key
 
-To learn more about Next.js, take a look at the following resources:
+# CORS
+ALLOWED_ORIGINS=*
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Cài đặt postgreSQL thủ công (Sẽ thay đổi sớm)
+Đọc document ở đây https://docs.google.com/document/d/1T3RD--GT-g5n5NRH2IBii5-O8I11iwXW/edit?usp=drive_link&ouid=116769113173522098529&rtpof=true&sd=true
+Trong phần 2, hãy tạo các table tương ứng.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Chạy với Docker (Khuyến nghị)
+```bash
+# Build và chạy container
+docker-compose up --build
 
-## Deploy on Vercel
+# Chạy trong background
+docker-compose up -d
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📚 API Endpoints
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Authentication
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| POST | `/api/auth/register` | Đăng ký tài khoản mới |
+| POST | `/api/auth/login` | Đăng nhập |
+
+### To-Do Lists (Yêu cầu xác thực)
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| POST | `/api/list/create` | Tạo công việc mới |
+| PUT | `/api/list/edit?id={id}` | Chỉnh sửa công việc |
+| GET | `/api/list/pagination` | Lấy danh sách công việc với phân trang |
+| GET | `/api/list/id?id={id}` | Lấy chi tiết công việc theo ID |
+| DELETE | `/api/list/id?id={id}` | Xóa công việc |
+
+### Ví dụ Request/Response
+
+#### Đăng ký tài khoản
+```bash
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "username": "john_doe",
+  "password": "secure123"
+}
+```

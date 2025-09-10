@@ -1,0 +1,39 @@
+services:
+    # Tên service, có thể đặt bất cứ gì.
+    # Dùng để: Reference giữa các services: depends_on: [app] và Quản lý containers: docker-compose restart app.
+    app:
+        # Có hai loại là build và image.
+        # Build: Build image từ Dockerfile vì code này là code mới, cần thực hiện nhiều bước được hướng dẫn từ Dockerfile.
+        # Image: Sử dụng image đã có sẵn.
+        build:
+            context: . # Thư mục mà Docker có quyền truy cập khi build. "." là thư mục cao nhất của project.
+            dockerfile: Dockerfile # Tên file Dockerfile.
+            target: production
+        container_name: todolist-app
+        restart: unless-stopped
+        environment:
+            NODE_ENV: ${NODE_ENV:-production}
+            BIND_IP: 0.0.0.0
+            HOST_IP: ${HOST_IP:-0.0.0.0}
+            PORT: ${PORT:-3001}
+
+            # PostgreSQL database credentials.
+            DB_HOST: ${DB_HOST}
+            DB_PORT: ${DB_PORT:-5432}
+            DB_USERNAME: ${DB_USERNAME}
+            DB_PASSWORD: ${DB_PASSWORD}
+            DB_NAME: ${DB_NAME}
+
+            # JWT secret.
+            JWT_SECRET: ${JWT_SECRET}
+
+            # Allowed origins for CORS.
+            ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+        ports:
+            - "${PORT:-3001}:3001"
+        networks:
+            - todolist-network
+
+networks:
+    todolist-network:
+        driver: bridge
