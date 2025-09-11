@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { SetStateAction, useEffect, useMemo, useState } from "react";
 import { useTasks } from "@/lib/useTasks";
 import Button from "@/components/ui/Button";
 import TaskFormModal from "./TaskFormModal";
-import { Task } from "@/lib/types";
+import { Priority, Status, Task } from "@/lib/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, ThumbsUp, Plus } from "lucide-react";
 import toast from "react-hot-toast";
@@ -101,7 +101,7 @@ export default function TaskTable() {
             <select
               className="border rounded-md px-2 py-1 text-sm"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as SetStateAction<"title" | "priority" | "status" | "createdAt">)}
             >
               <option value="title">Title</option>
               <option value="priority">Priority</option>
@@ -305,7 +305,11 @@ export default function TaskTable() {
         }
         onSubmit={async (v) => {
           if (editing) {
-            await tasks.update(String(editing.id), v);
+            await tasks.update(String(editing.id), {
+              ...v,
+              priority: v.priority as Priority,
+              status: v.status as Status,
+            });
             toast.success("Đã cập nhật");
           } else {
             await tasks.create(v as any);

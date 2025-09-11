@@ -63,7 +63,7 @@ export default function TaskFormModal({
         )}
 
         <label className="block text-sm font-medium">Priority</label>
-        <Select {...register("priority")}>
+        <Select {...register("priority", { valueAsNumber: true })}>
           <option value="0">None</option>
           <option value="1">Low</option>
           <option value="2">Medium</option>
@@ -72,7 +72,7 @@ export default function TaskFormModal({
         </Select>
 
         <label className="block text-sm font-medium mt-2">Status</label>
-        <Select {...register("status")}>
+        <Select {...register("status", { valueAsNumber: true })}>
           <option value="0">Backlog</option>
           <option value="1">In Progress</option>
           <option value="2">Completed</option>

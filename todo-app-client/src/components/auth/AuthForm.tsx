@@ -30,8 +30,12 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
         toast.success("Đăng ký thành công");
         router.push("/login");
       }
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e: unknown) {
+      if (e && typeof e === "object" && "message" in e) {
+        toast.error((e as { message: string }).message);
+      } else {
+        toast.error("Đã xảy ra lỗi");
+      }
     }
   });
 

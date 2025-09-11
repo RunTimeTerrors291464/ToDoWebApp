@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useAuth } from "@/lib/useAuth";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
-import Sidebar from "@/components/layout/Sidebar";
 import TaskTable from "@/components/tasks/TaskTable";
 import toast from "react-hot-toast";
 
@@ -15,7 +14,7 @@ export default function DashboardPage() {
   useEffect(() => { check(); }, []);
   useEffect(() => {
     if (!loading && !user) {
-      toast.error("Vui lòng đăng nhập trước khi vào Dashboard");
+      // toast.error("Vui lòng đăng nhập trước khi vào Dashboard");
       router.replace("/login");
     }
   }, [loading, user, router]);
