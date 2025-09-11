@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, Res, HttpCode, UseGuards, Get, Req } from '@nestjs/common';
 import type { Response } from 'express';
 
 // Imports authentication service.
@@ -10,6 +10,9 @@ import { AuthenticationDto } from '../dto/authentication.dto';
 // Imports custom exception.
 import { CustomErrorException } from '../../common/customException';
 import { errorCodes } from '../../common/errorConstants';
+
+// Imports JWT guard.
+import { JwtGuard } from '../jwt.guard';
 
 @Controller('api/auth')
 export class AuthenticationController {
@@ -56,4 +59,19 @@ export class AuthenticationController {
         }
     }
 
+    @UseGuards(JwtGuard)
+    @Get('me')
+    async getUserInfo(@Req() request: Request) {
+        try {
+            const userId = (request as any).user.id;
+            const user = await this.authenticationService.getUserById(userId);
+            return {
+                status: 200,
+                message: 'User information fetched successfully.',
+                data: user,
+            }
+        } catch (error) {
+            throw new CustomErrorException(400, errorCodes.API_AUTH_LOGIN_ERROR, 'Failed to fetch user information, please try again.');
+        }
+    }
 }
