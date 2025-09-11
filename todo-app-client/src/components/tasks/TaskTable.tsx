@@ -312,7 +312,11 @@ export default function TaskTable() {
             });
             toast.success("Đã cập nhật");
           } else {
-            await tasks.create(v as any);
+            await tasks.create({
+              ...v,
+              priority: v.priority as Priority,
+              status: v.status as Status,
+            });
             toast.success("Đã thêm task");
           }
         }}

@@ -18,7 +18,7 @@ type TasksState = {
     search?: string;
   }) => Promise<void>;
   // fetch: () => Promise<void>;
-  create: (t: Omit<Task, "id">) => Promise<void>;
+  create: (t: Omit<Task, "id" | "createdAt">) => Promise<void>;
   update: (id: string, t: Partial<Omit<Task, "id">>) => Promise<void>;
   remove: (id: string) => Promise<void>;
 };
