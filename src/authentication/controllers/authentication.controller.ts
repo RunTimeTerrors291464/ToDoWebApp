@@ -64,6 +64,10 @@ export class AuthenticationController {
     async getUserInfo(@Req() request: Request) {
         try {
             const userId = (request as any).user.id;
+
+            // If the user is not logged in, throw an error.
+            if (!userId) throw new CustomErrorException(401, errorCodes.API_AUTH_UNAUTHORIZED, 'Unauthorized. Please login to continue.');
+
             const user = await this.authenticationService.getUserById(userId);
             return {
                 status: 200,
