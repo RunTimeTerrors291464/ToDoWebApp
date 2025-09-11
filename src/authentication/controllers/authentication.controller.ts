@@ -59,6 +59,7 @@ export class AuthenticationController {
         }
     }
 
+    // Get the user information.
     @UseGuards(JwtGuard)
     @Get('me')
     async getUserInfo(@Req() request: Request) {
@@ -66,7 +67,7 @@ export class AuthenticationController {
             const userId = (request as any).user.id;
 
             // If the user is not logged in, throw an error.
-            if (!userId) throw new CustomErrorException(401, errorCodes.API_AUTH_UNAUTHORIZED, 'Unauthorized. Please login to continue.');
+            if (!userId) throw new CustomErrorException(401, errorCodes.API_AUTH_UNAUTHORIZED, 'User is not logged in.');
 
             const user = await this.authenticationService.getUserById(userId);
             return {
@@ -76,6 +77,28 @@ export class AuthenticationController {
             }
         } catch (error) {
             throw new CustomErrorException(400, errorCodes.API_AUTH_LOGIN_ERROR, 'Failed to fetch user information, please try again.');
+        }
+    }
+
+    // Logout a user.
+    @UseGuards(JwtGuard)
+    @Post('logout')
+    @HttpCode(200)
+    async logout(@Res({ passthrough: true }) response: Response) {
+        try {
+            response.cookie('accessToken', '', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'none',
+                maxAge: 0, // This expires the cookie immediately
+            });
+
+            return {
+                status: 200,
+                message: 'User logged out successfully.',
+            }
+        } catch (error) {
+            throw new CustomErrorException(400, errorCodes.API_AUTH_LOGOUT_ERROR, 'Failed to logout, please try again.');
         }
     }
 }
