@@ -6,13 +6,19 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Sidebar from "@/components/layout/Sidebar";
 import TaskTable from "@/components/tasks/TaskTable";
+import toast from "react-hot-toast";
 
 export default function DashboardPage() {
   const { user, loading, check } = useAuth();
   const router = useRouter();
 
   useEffect(() => { check(); }, []);
-  useEffect(() => { if (!loading && !user) router.replace("/login"); }, [loading, user]);
+  useEffect(() => {
+    if (!loading && !user) {
+      toast.error("Vui lòng đăng nhập trước khi vào Dashboard");
+      router.replace("/login");
+    }
+  }, [loading, user, router]);
 
   if (loading || !user) {
     return <div className="grid min-h-screen place-items-center text-gray-500">Đang tải...</div>;

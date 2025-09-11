@@ -93,6 +93,10 @@ export const useTasks = create<TasksState>((set, get) => ({
   remove: async (id: string) => {
     await api.delete(`/list/id?id=${id}`);
     set({ items: get().items.filter((t) => String(t.id) !== String(id)) });
+    await get().fetch({
+      page: get().currentPage,
+      limit: 10, // hoặc lấy từ state nếu có
+    });
     
     // MOCK: không gọi API, chỉ set items giả
     // set({ items: get().items.filter((t) => String(t.id) !== String(id)) });

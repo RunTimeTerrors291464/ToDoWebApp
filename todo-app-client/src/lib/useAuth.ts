@@ -14,28 +14,29 @@ type AuthState = {
 
 export const useAuth = create<AuthState>((set, get) => ({
   user: null,
-  loading: false,
-
-//   check: async () => {
-//     set({ loading: true });
-//     try {
-//       const { data } = await api.get("/auth/me");
-//       set({ user: data || null });
-//     } catch {
-//       set({ user: null });
-//     } finally {
-//       set({ loading: false });
-//     }
-//   },
+  loading: true,
 
   check: async () => {
-    // 🚧 MOCK: không gọi API, chỉ set loading=false
     set({ loading: true });
-    // giả lập delay 200ms để giống thật
-    await new Promise((res) => setTimeout(res, 200));
-    // giữ nguyên user đang có
-    set({ loading: false, user: get().user });
+    try {
+      const { data } = await api.get("/auth/me");
+      set({ user: data.data || null });
+    } catch {
+      set({ user: null });
+    } finally {
+      set({ loading: false });
+    }
   },
+
+  // Mock
+  // check: async () => {
+  //   // 🚧 MOCK: không gọi API, chỉ set loading=false
+  //   set({ loading: true });
+  //   // giả lập delay 200ms để giống thật
+  //   await new Promise((res) => setTimeout(res, 200));
+  //   // giữ nguyên user đang có
+  //   set({ loading: false, user: get().user });
+  // },
 
   login: async (username, password) => {
     const { data } = await api.post("/auth/login", { username, password });
@@ -55,13 +56,17 @@ export const useAuth = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
-    // backend không có /api/auth/logout
-    // chỉ cần xoá cookie phía client => với httpOnly thì chỉ có cách gọi API clear cookie (nếu backend support),
-    // ở đây ta giả sử logout = set user=null
-    set({ user: null });
+    // // backend không có /api/auth/logout
+    // // chỉ cần xoá cookie phía client => với httpOnly thì chỉ có cách gọi API clear cookie (nếu backend support),
+    // // ở đây ta giả sử logout = set user=null
+    // set({ user: null, loading: false });
+    // window.location.href = "/login"; // hard redirect để chắc chắn
+    // // hoặc dùng router.replace("/login") nếu muốn giữ trong SPA
+
+    const { data } = await api.get("/auth/logout");
+    set({ user: null, loading: false });
   },
 }));
 function get() {
-    throw new Error("Function not implemented.");
+  throw new Error("Function not implemented.");
 }
-
