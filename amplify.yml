@@ -1,19 +1,18 @@
 version: 1
-applications:
-  - appRoot: todo-app-client
-    frontend:
-      phases:
-        preBuild:
-          commands:
-            - npm install
-        build:
-          commands:
-            - npm run build
-      artifacts:
-        baseDirectory: .next
-        files:
-          - "**/*"
-      cache:
-        paths:
-          - .next/cache/**/*
-          - node_modules/**/*
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd todo-app-client
+        - npm install
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: todo-app-client/.next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - todo-app-client/node_modules/**/*
+      - todo-app-client/.next/cache/**/*
