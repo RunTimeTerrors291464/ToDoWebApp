@@ -5,6 +5,9 @@ export const api = axios.create({
   withCredentials: true, // nhận & gửi cookie nếu backend đặt httpOnly
 });
 
+console.log("API Base URL:", process.env.NEXT_PUBLIC_API_BASE_URL); // For debugging
+
+
 // optional: interceptor báo lỗi gọn
 api.interceptors.response.use(
   (r) => r,
