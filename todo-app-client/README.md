@@ -2,7 +2,6 @@
 
 Ứng dụng Todo đơn giản với các chức năng **đăng ký, đăng nhập, đăng xuất, quản lý công việc (CRUD)**.  
 Frontend được xây dựng bằng **Next.js 13 App Router** + **TailwindCSS**, backend cung cấp API RESTful.
-
 ---
 
 ## 🚀 Tính năng
@@ -90,6 +89,48 @@ npm run dev
 
 Truy cập: [http://localhost:3000](http://localhost:3000)
 
+---
+## 🚀 Hướng dẫn setup & chạy project với Docker
+
+### 1. Yêu cầu
+- [Docker](https://www.docker.com/) đã được cài đặt trên máy.
+
+### 2. Build và chạy container
+
+Chạy các lệnh sau trong thư mục gốc của project:
+
+```bash
+# Build image
+docker build -t todo-app-client .
+
+# Chạy container
+docker run -p 3000:3000 --env-file .env.production todo-app-client
+```
+
+Hoặc sử dụng docker-compose:
+
+```bash
+docker-compose up -d
+```
+
+### 3. Truy cập ứng dụng
+
+Sau khi container chạy thành công, truy cập vào: [http://localhost:3000](http://localhost:3000)
+
+### 4. Một số lệnh Docker hữu ích
+
+- Xem các container đang chạy:
+  ```bash
+  docker ps
+  ```
+- Dừng container:
+  ```bash
+  docker stop <container_id>
+  ```
+- Xem logs:
+  ```bash
+  docker logs <container_id>
+  ```
 ---
 
 ## 🔑 API Backend
