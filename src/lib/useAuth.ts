@@ -63,7 +63,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     // window.location.href = "/login"; // hard redirect để chắc chắn
     // // hoặc dùng router.replace("/login") nếu muốn giữ trong SPA
 
-    const { data } = await api.get("/auth/logout");
+    const { data } = await api.post("/auth/logout");
     set({ user: null, loading: false });
   },
 }));
