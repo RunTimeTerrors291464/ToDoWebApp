@@ -74,14 +74,32 @@ yarn install
 ```
 
 ### 3. Tạo file môi trường
+  Trong file `.env`, cấu hình:
+  ```
+  NEXT_PUBLIC_API_BASE_URL="/api"
+  ```
+  Điều này giúp frontend gọi API qua đường dẫn tương đối `/api`.
 
-Tạo `.env.local`:
+### 4. Cấu hình Proxy API:
+  Đã cấu hình proxy trong `next.config.ts`:
+  ```ts
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://backend-container:3001/api/:path*', // tên service hoặc container backend trong cùng network
+      },
+    ];
+  }
+  ```
+  > Thay `backend-container` bằng tên service hoặc container backend thực tế trong docker compose/network.
 
-```env
-NEXT_PUBLIC_API_URL=http://localhost:4000/api
-```
+- **Lưu ý:**  
+  - Khi frontend chạy trong container, các request từ browser tới `/api` sẽ được Next.js proxy sang backend container.
+  - Đảm bảo frontend và backend cùng network Docker.
 
-### 4. Chạy dev
+
+### 5. Chạy dev
 
 ```bash
 npm run dev
