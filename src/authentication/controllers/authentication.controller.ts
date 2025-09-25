@@ -14,6 +14,10 @@ import { errorCodes } from '../../common/errorConstants';
 // Imports JWT guard.
 import { JwtGuard } from '../jwt.guard';
 
+// Imports Swagger.
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiCookieAuth } from '@nestjs/swagger';
+
+@ApiTags('Authentication')
 @Controller('api/auth')
 export class AuthenticationController {
     constructor(private readonly authenticationService: AuthenticationService) { }
@@ -21,6 +25,12 @@ export class AuthenticationController {
     // Register a new user.
     @Post('register')
     @HttpCode(201)
+    @ApiOperation({
+        summary: 'Register a new user.',
+    })
+    @ApiBody({
+        type: AuthenticationDto,
+    })
     async register(@Body() authenticationDto: AuthenticationDto) {
         try {
             const result = await this.authenticationService.register(authenticationDto);
@@ -35,6 +45,12 @@ export class AuthenticationController {
     }
 
     // Login a user.
+    @ApiOperation({
+        summary: 'Login a user.',
+    })
+    @ApiBody({
+        type: AuthenticationDto,
+    })
     @Post('login')
     @HttpCode(200)
     async login(@Body() authenticationDto: AuthenticationDto, @Res({ passthrough: true }) response: Response) {
@@ -60,6 +76,9 @@ export class AuthenticationController {
     }
 
     // Get the user information.
+    @ApiOperation({
+        summary: 'Get the user information.',
+    })
     @UseGuards(JwtGuard)
     @Get('me')
     async getUserInfo(@Req() request: Request) {
@@ -81,6 +100,9 @@ export class AuthenticationController {
     }
 
     // Logout a user.
+    @ApiOperation({
+        summary: 'Logout a user.',
+    })
     @UseGuards(JwtGuard)
     @Post('logout')
     @HttpCode(200)

@@ -23,6 +23,15 @@ async function bootstrap() {
         transform: true
     }));
 
+    const config = new DocumentBuilder()
+        .setTitle('To-Do List API')
+        .setDescription('API for To-Do List')
+        .setVersion('1.0')
+        .addCookieAuth('accessToken')
+        .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+
     // Listen to the IP and port.
     const port = process.env.PORT ?? 3000;
     const bindIP = process.env.BIND_IP ?? '0.0.0.0';
